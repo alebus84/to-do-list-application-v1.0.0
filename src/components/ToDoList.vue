@@ -1,10 +1,7 @@
-<script setup>
-import Input from "@/components/Input.vue";
-</script>
+<script setup></script>
 
 <template>
-  ToDoList component
-  <Input/>
+  <ul></ul>
 </template>
 
 <style scoped></style>

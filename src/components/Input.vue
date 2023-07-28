@@ -1,7 +1,7 @@
 <script setup></script>
 
 <template>
-  Input component
+  <input type="text">
 </template>
 
 <style scoped></style>
