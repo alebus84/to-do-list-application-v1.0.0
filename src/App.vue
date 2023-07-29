@@ -13,7 +13,6 @@ const listOfToDo = ref({notDone: [], done: []});
 
 onMounted(() => {
   inputElement.value.addEventListener("keypress", (event) => {
-    event.preventDefault();
     if (event.key === "Enter") {
       submitButton.value.click();
     }
@@ -21,23 +20,16 @@ onMounted(() => {
 })
 
 const checkLocalStorage = () => {
-  if (window.localStorage.getItem("greatestId")) {
-    console.log("greatestId exist in local storage");
-    greatestId.value = Number(window.localStorage.getItem("greatestId"));
-  }
-  if (window.localStorage.getItem("listOfToDo")) {
-    console.log("listOfToDo exist in local storage");
-    listOfToDo.value = JSON.parse(window.localStorage.getItem("listOfToDo"));
-  }
+  if (window.localStorage.getItem("greatestId")) greatestId.value = Number(window.localStorage.getItem("greatestId"));
+  if (window.localStorage.getItem("listOfToDo")) listOfToDo.value = JSON.parse(window.localStorage.getItem("listOfToDo"));
 }
 checkLocalStorage();
 
 const handleCreate = (event) => {
   event.preventDefault();
   const length = 5;
-  if (fieldText.value.length < length) {
-    theTextIsTooShort.value = true;
-  } else {
+  if (fieldText.value.length < length) theTextIsTooShort.value = true;
+  else {
     theTextIsTooShort.value = false;
     listOfToDo.value.notDone.push({id: greatestId.value, name: fieldText.value});
     window.localStorage.setItem("listOfToDo", JSON.stringify(listOfToDo.value));
@@ -64,6 +56,17 @@ const handleChecked = (event) => {
   window.localStorage.setItem("listOfToDo", JSON.stringify(listOfToDo.value));
 };
 
+const handleDelete = (event) => {
+  event.preventDefault();
+  const id = Number(event.target.getAttribute("aria-label"));
+  const isChecked = event.target.getAttribute("aria-checked");
+  if (isChecked === "true") listOfToDo.value.done = listOfToDo.value.done.filter(toDo => toDo["id"] !== id);
+  else listOfToDo.value.notDone = listOfToDo.value.notDone.filter(toDo => toDo["id"] !== id);
+  listOfToDo.value.notDone.sort((currentToDo, nextToDo) => currentToDo["id"] - nextToDo["id"]);
+  listOfToDo.value.done.sort((currentToDo, nextToDo) => currentToDo["id"] - nextToDo["id"]);
+  window.localStorage.setItem("listOfToDo", JSON.stringify(listOfToDo.value));
+};
+
 </script>
 
 <template>
@@ -75,12 +78,16 @@ const handleChecked = (event) => {
     </p>
     <ul>
       <li v-for="toDo in listOfToDo.notDone" :key="toDo.id">
-        <input type="checkbox" :aria-label="toDo.id" @change="handleChecked"> À faire : {{ toDo.name }}
+        <input type="checkbox" :aria-label="toDo.id" @change="handleChecked">
+        À faire : {{ toDo.name }}
+        <input type="submit" :aria-label="toDo.id" aria-checked="false" value="Supprimer la tâche" @click="handleDelete">
       </li>
     </ul>
     <ul>
       <li v-for="toDo in listOfToDo.done" :key="toDo.id">
-        <input type="checkbox" :aria-label="toDo.id" checked="checked" @change="handleChecked"> Faite : {{ toDo.name }}
+        <input type="checkbox" :aria-label="toDo.id" checked="checked" @change="handleChecked">
+        Faite : {{ toDo.name }}
+        <input type="submit" :aria-label="toDo.id" aria-checked="true" value="Supprimer la tâche" @click="handleDelete">
       </li>
     </ul>
   </div>
