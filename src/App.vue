@@ -1,13 +1,24 @@
 <script setup>
 
-import { ref } from "vue";
+import { ref, onMounted } from "vue";
 //import Input from "@/components/Input.vue";
 //import ToDoList from "@/components/ToDoList.vue";
 
+const inputElement = ref(null);
+const submitButton = ref(null);
 const fieldText = ref("");
 const theTextIsTooShort = ref(false);
 const greatestId = ref(1);
 const listOfToDo = ref({notDone: [], done: []});
+
+onMounted(() => {
+  inputElement.value.addEventListener("keypress", (event) => {
+    event.preventDefault();
+    if (event.key === "Enter") {
+      submitButton.value.click();
+    }
+  });
+})
 
 const checkLocalStorage = () => {
   if (window.localStorage.getItem("greatestId")) {
@@ -57,8 +68,8 @@ const handleChecked = (event) => {
 
 <template>
   <div id="wrapper">
-    <input type="text" v-model="fieldText">
-    <input type="submit" value="Créer la tâche" @click="handleCreate">
+    <input ref="inputElement" type="text" v-model="fieldText">
+    <input ref="submitButton" type="submit" value="Créer la tâche" @click="handleCreate">
     <p class="alert" v-if="theTextIsTooShort">
       Le nom de la tâche doit contenir au moins 5 caractères.
     </p>
