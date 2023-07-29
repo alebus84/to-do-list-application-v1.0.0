@@ -21,38 +21,34 @@ const checkLocalStorage = () => {
 }
 checkLocalStorage();
 
-const getGreatestId = (idsToCheck) => {
-  return Math.max(...idsToCheck);
-};
-
 const handleCreate = (event) => {
   event.preventDefault();
-  /*const stringKeys = Object.keys(listOfToDo.value);
-  console.log(stringKeys);
-  const numberKeys = [];
-  stringKeys.forEach(key => numberKeys.push(Number(key)));
-  console.log(numberKeys);*/
   const length = 5;
   if (fieldText.value.length < length) {
     theTextIsTooShort.value = true;
   } else {
     theTextIsTooShort.value = false;
+    listOfToDo.value.notDone.push({id: greatestId.value, name: fieldText.value});
+    window.localStorage.setItem("listOfToDo", JSON.stringify(listOfToDo.value));
     greatestId.value++;
     window.localStorage.setItem("greatestId", `${greatestId.value}`);
-    //console.log(greatestId.value);
-    //console.log(Number(window.localStorage.getItem("greatestId")));
-    listOfToDo.value.notDone.unshift({id: greatestId.value, name: fieldText.value});
-    window.localStorage.setItem("listOfToDo", JSON.stringify(listOfToDo.value));
-    //console.log(listOfToDo.value);
-    //console.log(JSON.parse(window.localStorage.getItem("listOfToDo")));
-    /*const ids = [];
-    listOfToDo.value.forEach(toDo => ids.push(toDo.id));
-    console.log(ids);
-    const greatestId = getGreatestId(ids);
-    console.log(greatestId);
-    listOfToDo.value.unshift({id: greatestId + 1, name: fieldText.value, done: false});*/
-    //window.localStorage.setItem("toDoList", JSON.stringify(listOfToDo.value));
   }
+};
+
+const handleChecked = (event) => {
+  event.preventDefault();
+  const id = Number(event.target.getAttribute("aria-label"));
+  const isChecked = event.target.checked;
+  if (isChecked) {
+    const toDoChecked = listOfToDo.value.notDone.filter(toDo => toDo["id"] === id)[0];
+    listOfToDo.value.notDone = listOfToDo.value.notDone.filter(toDo => toDo !== toDoChecked);
+    listOfToDo.value.done.push(toDoChecked);
+  } else {
+    const toDoUnchecked = listOfToDo.value.done.filter(toDo => toDo["id"] === id)[0];
+    listOfToDo.value.done = listOfToDo.value.done.filter(toDo => toDo !== toDoUnchecked);
+    listOfToDo.value.notDone.push(toDoUnchecked);
+  }
+  window.localStorage.setItem("listOfToDo", JSON.stringify(listOfToDo.value));
 };
 
 </script>
@@ -65,10 +61,10 @@ const handleCreate = (event) => {
       Le nom de la tâche doit contenir au moins 5 caractères.
     </p>
     <ul>
-      <li v-for="toDo in listOfToDo.notDone"><input type="checkbox" v-bind:checked="toDo.done">{{ toDo.name }}</li>
+      <li v-for="toDo in listOfToDo.notDone" :key="toDo.id"><input type="checkbox" :aria-label="toDo.id" @change="handleChecked">{{ toDo.name }}</li>
     </ul>
     <ul>
-      <li v-for="toDo in listOfToDo.done"><input type="checkbox" v-bind:checked="toDo.done">{{ toDo.name }}</li>
+      <li v-for="toDo in listOfToDo.done" :key="toDo.id"><input type="checkbox" :aria-label="toDo.id" checked="checked" @change="handleChecked">{{ toDo.name }}</li>
     </ul>
   </div>
 </template>
