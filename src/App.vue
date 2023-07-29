@@ -6,12 +6,13 @@ import { ref } from "vue";
 
 const text = ref("");
 const theTextIsTooShort = ref(false);
-const list = ref([{name: "to do 1", done: false}, {name: "to do 2", done: false}]);
+const list = ref([]);
 
 const checkLocalStorage = () => {
   if (window.localStorage.getItem("toDoList")) {
     console.log("toDoList existe dans le localStorage");
     console.log(window.localStorage.getItem("toDoList"));
+    list.value = JSON.parse(window.localStorage.getItem("toDoList"));
   } else {
     console.log("toDoList n'existe pas dans le localStorage");
     console.log(window.localStorage.getItem("toDoList"));
@@ -27,6 +28,7 @@ const handleCreate = (event) => {
   } else {
     theTextIsTooShort.value = false;
     list.value.unshift({name: text.value, done: false});
+    window.localStorage.setItem("toDoList", JSON.stringify(list.value));
   }
 }
 
