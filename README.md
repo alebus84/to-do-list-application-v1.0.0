@@ -1,4 +1,4 @@
-# to-do-list-application
+# to-do-listOfToDo-application
 
 This template should help get you started developing with Vue 3 in Vite.
 
