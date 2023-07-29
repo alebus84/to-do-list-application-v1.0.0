@@ -48,6 +48,8 @@ const handleChecked = (event) => {
     listOfToDo.value.done = listOfToDo.value.done.filter(toDo => toDo !== toDoUnchecked);
     listOfToDo.value.notDone.push(toDoUnchecked);
   }
+  listOfToDo.value.notDone.sort((currentToDo, nextToDo) => currentToDo["id"] - nextToDo["id"]);
+  listOfToDo.value.done.sort((currentToDo, nextToDo) => currentToDo["id"] - nextToDo["id"]);
   window.localStorage.setItem("listOfToDo", JSON.stringify(listOfToDo.value));
 };
 
@@ -61,10 +63,14 @@ const handleChecked = (event) => {
       Le nom de la tâche doit contenir au moins 5 caractères.
     </p>
     <ul>
-      <li v-for="toDo in listOfToDo.notDone" :key="toDo.id"><input type="checkbox" :aria-label="toDo.id" @change="handleChecked">{{ toDo.name }}</li>
+      <li v-for="toDo in listOfToDo.notDone" :key="toDo.id">
+        <input type="checkbox" :aria-label="toDo.id" @change="handleChecked"> À faire : {{ toDo.name }}
+      </li>
     </ul>
     <ul>
-      <li v-for="toDo in listOfToDo.done" :key="toDo.id"><input type="checkbox" :aria-label="toDo.id" checked="checked" @change="handleChecked">{{ toDo.name }}</li>
+      <li v-for="toDo in listOfToDo.done" :key="toDo.id">
+        <input type="checkbox" :aria-label="toDo.id" checked="checked" @change="handleChecked"> Faite : {{ toDo.name }}
+      </li>
     </ul>
   </div>
 </template>
