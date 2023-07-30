@@ -17,6 +17,13 @@ onMounted(() => {
       submitButton.value.click();
     }
   });
+  const lis = document.querySelectorAll("li");
+  lis.forEach(li => li.addEventListener("mouseenter", (event) => {
+    event.target.querySelector("input[type='submit']").classList.replace("hidden", "visible");
+  }));
+  lis.forEach(li => li.addEventListener("mouseleave", (event) => {
+    event.target.querySelector("input[type='submit']").classList.replace("visible", "hidden");
+  }));
 })
 
 const checkLocalStorage = () => {
@@ -70,27 +77,64 @@ const handleDelete = (event) => {
 </script>
 
 <template>
-  <div id="wrapper">
-    <input ref="inputElement" type="text" v-model="fieldText">
-    <input ref="submitButton" type="submit" value="Créer la tâche" @click="handleCreate">
-    <p class="alert" v-if="theTextIsTooShort">
-      Le nom de la tâche doit contenir au moins 5 caractères.
-    </p>
-    <ul>
-      <li v-for="toDo in listOfToDo.notDone" :key="toDo.id">
-        <input type="checkbox" :aria-label="toDo.id" @change="handleChecked">
-        À faire : {{ toDo.name }}
-        <input type="submit" :aria-label="toDo.id" aria-checked="false" value="Supprimer la tâche" @click="handleDelete">
-      </li>
-    </ul>
-    <ul>
-      <li v-for="toDo in listOfToDo.done" :key="toDo.id">
-        <input type="checkbox" :aria-label="toDo.id" checked="checked" @change="handleChecked">
-        Faite : {{ toDo.name }}
-        <input type="submit" :aria-label="toDo.id" aria-checked="true" value="Supprimer la tâche" @click="handleDelete">
-      </li>
-    </ul>
+  <div id="application-wrapper">
+    <div id="form-wrapper">
+      <div id="inputs-wrapper">
+        <input ref="inputElement" type="text" v-model="fieldText">
+        <input ref="submitButton" type="submit" value="Créer la tâche" @click="handleCreate">
+      </div>
+      <p class="alert" v-if="theTextIsTooShort">
+        Le nom de la tâche doit contenir au moins 5 caractères.
+      </p>
+    </div>
+    <div id="lists-wrapper">
+      <ul>
+        <li v-for="toDo in listOfToDo.notDone" :key="toDo.id">
+          <input type="checkbox" :aria-label="toDo.id" @change="handleChecked">
+          À faire : {{ toDo.name }}
+          <input type="submit" :aria-label="toDo.id" class="hidden" aria-checked="false" value="Supprimer la tâche" @click="handleDelete">
+        </li>
+      </ul>
+      <ul>
+        <li v-for="toDo in listOfToDo.done" :key="toDo.id">
+          <input type="checkbox" :aria-label="toDo.id" checked="checked" @change="handleChecked">
+          Faite : {{ toDo.name }}
+          <input type="submit" :aria-label="toDo.id" class="hidden" aria-checked="true" value="Supprimer la tâche" @click="handleDelete">
+        </li>
+      </ul>
+    </div>
   </div>
 </template>
 
-<style scoped></style>
+<style scoped>
+
+#application-wrapper ul {
+  list-style: none;
+  background-color: purple;
+  margin: 2px;
+  padding: 2px;
+}
+
+#application-wrapper li {
+  background-color: pink;
+  margin: 2px;
+  padding: 2px;
+}
+
+#application-wrapper input[class='hidden'] {
+  visibility: hidden;
+  opacity: 0;
+  transition-duration: 0.5s;
+  transition-timing-function: ease;
+  transition-property: visibility, opacity;
+}
+
+#application-wrapper input[class='visible'] {
+  visibility: visible;
+  opacity: 1;
+  transition-duration: 0.5s;
+  transition-timing-function: ease;
+  transition-property: visibility, opacity;
+}
+
+</style>
