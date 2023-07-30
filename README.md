@@ -1,29 +1,22 @@
-# to-do-listOfToDo-application
+# To do list application v1.0.0
 
-This template should help get you started developing with Vue 3 in Vite.
+Application Vue.js servant à gérer une liste de tâches.
 
-## Recommended IDE Setup
+Environnement :
+- IntelliJ IDEA 2023.1.3
 
-[VSCode](https://code.visualstudio.com/) + [Volar](https://marketplace.visualstudio.com/items?itemName=Vue.volar) (and disable Vetur) + [TypeScript Vue Plugin (Volar)](https://marketplace.visualstudio.com/items?itemName=Vue.vscode-typescript-vue-plugin).
+Stack technique :
+- HTML5
+- CSS3
+- React.js 3.3.4
 
-## Customize configuration
+Navigateurs testés :
+- Mozilla Firefox 115.0
 
-See [Vite Configuration Reference](https://vitejs.dev/config/).
+Cette application possède les fonctionnalités automatiques suivantes :
+- Sauvegarde des tâches dans la mémoire du navigateur afin que l'utilisateur puissent les retrouver même après fermeture du navigateur.
 
-## Project Setup
-
-```sh
-npm install
-```
-
-### Compile and Hot-Reload for Development
-
-```sh
-npm run dev
-```
-
-### Compile and Minify for Production
-
-```sh
-npm run build
-```
+Cette application possède les fonctionnalités utilisateur suivantes :
+- Création d'une nouvelle tâche.
+- Suppression d'une tâche.
+- Modification de l'état d'une tâche (à faire / fait) à l'aide d'une case à cocher.
