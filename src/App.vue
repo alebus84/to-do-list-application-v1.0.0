@@ -1,6 +1,6 @@
 <script setup>
 
-import { ref, onMounted } from "vue";
+import {ref, onMounted, onUpdated} from "vue";
 //import Input from "@/components/Input.vue";
 //import ToDoList from "@/components/ToDoList.vue";
 
@@ -17,13 +17,11 @@ onMounted(() => {
       submitButton.value.click();
     }
   });
-  const lis = document.querySelectorAll("li");
-  lis.forEach(li => li.addEventListener("mouseenter", (event) => {
-    event.target.querySelector("input[type='submit']").classList.replace("hidden", "visible");
-  }));
-  lis.forEach(li => li.addEventListener("mouseleave", (event) => {
-    event.target.querySelector("input[type='submit']").classList.replace("visible", "hidden");
-  }));
+  addMouseEvents();
+})
+
+onUpdated(() => {
+  addMouseEvents();
 })
 
 const checkLocalStorage = () => {
@@ -31,6 +29,16 @@ const checkLocalStorage = () => {
   if (window.localStorage.getItem("listOfToDo")) listOfToDo.value = JSON.parse(window.localStorage.getItem("listOfToDo"));
 }
 checkLocalStorage();
+
+const addMouseEvents = () => {
+  const lis = document.querySelectorAll("li");
+  lis.forEach(li => li.addEventListener("mouseenter", (event) => {
+    event.target.querySelector("input[type='submit']").classList.replace("hidden", "visible");
+  }));
+  lis.forEach(li => li.addEventListener("mouseleave", (event) => {
+    event.target.querySelector("input[type='submit']").classList.replace("visible", "hidden");
+  }));
+};
 
 const handleCreate = (event) => {
   event.preventDefault();
@@ -79,27 +87,30 @@ const handleDelete = (event) => {
 <template>
   <div id="application-wrapper">
     <div id="form-wrapper">
+      <h2>Nouvelle tâche</h2>
       <div id="inputs-wrapper">
         <input ref="inputElement" type="text" v-model="fieldText">
-        <input ref="submitButton" type="submit" value="Créer la tâche" @click="handleCreate">
+        <input ref="submitButton" type="submit" value="Créer" @click="handleCreate">
       </div>
       <p class="alert" v-if="theTextIsTooShort">
         Le nom de la tâche doit contenir au moins 5 caractères.
       </p>
     </div>
     <div id="lists-wrapper">
+      <h2>À faire</h2>
       <ul>
-        <li v-for="toDo in listOfToDo.notDone" :key="toDo.id">
+        <li class="notDone created" v-for="toDo in listOfToDo.notDone" :key="toDo.id" :id="toDo.id">
           <input type="checkbox" :aria-label="toDo.id" @change="handleChecked">
-          À faire : {{ toDo.name }}
-          <input type="submit" :aria-label="toDo.id" class="hidden" aria-checked="false" value="Supprimer la tâche" @click="handleDelete">
+          {{ toDo.name }}
+          <input type="submit" :aria-label="toDo.id" class="hidden" aria-checked="false" value="X" @click="handleDelete">
         </li>
       </ul>
+      <h2>Fait</h2>
       <ul>
-        <li v-for="toDo in listOfToDo.done" :key="toDo.id">
+        <li class="done created" v-for="toDo in listOfToDo.done" :key="toDo.id" :id="toDo.id">
           <input type="checkbox" :aria-label="toDo.id" checked="checked" @change="handleChecked">
-          Faite : {{ toDo.name }}
-          <input type="submit" :aria-label="toDo.id" class="hidden" aria-checked="true" value="Supprimer la tâche" @click="handleDelete">
+          <span>{{ toDo.name }}</span>
+          <input type="submit" :aria-label="toDo.id" class="hidden" aria-checked="true" value="X" @click="handleDelete">
         </li>
       </ul>
     </div>
@@ -108,20 +119,160 @@ const handleDelete = (event) => {
 
 <style scoped>
 
-#application-wrapper ul {
+#application-wrapper {
+  box-sizing: border-box;
+  color: rgb(0, 0, 100);
+  padding: 5px;
+}
+
+#application-wrapper * {
+  box-sizing: border-box;
+}
+
+#application-wrapper h2 {
+  margin: 0;
+  padding: 5px;
+  text-align: center;
+}
+
+#application-wrapper input {
+  color: rgb(0, 0, 100);
+  border-radius: 3px;
+}
+
+#application-wrapper input[type='text'],
+#application-wrapper input[type='checkbox'] {
+  background-color: rgb(255, 255, 255);
+  border: solid 1px rgb(0, 0, 100);
+  box-shadow: inset 2px 2px 5px rgba(0, 0, 0, 0.5);
+}
+
+#application-wrapper input[type='submit'],
+#application-wrapper input[type='checkbox'] {
+  cursor: pointer;
+}
+
+#application-wrapper input[type='checkbox'] {
+  appearance: none;
+  width: 12px;
+  height: 12px;
+}
+
+#application-wrapper input[type='checkbox']:checked {
+  position: relative;
+  display: block;
+  overflow: hidden;
+}
+
+#application-wrapper input[type='checkbox']:checked:after {
+  content: "\002714";
+  display: block;
+  color: rgb(0, 0, 100);
+  position: absolute;
+  top: 5px;
+  left: 0;
+  line-height: 0;
+}
+
+#application-wrapper input[type='submit'] {
+  background-color: rgb(200, 200, 255);
+  border: none;
+  box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.5);
+  flex: none;
+  padding: 3px 6px 3px 6px;
+}
+
+#form-wrapper {
+  padding: 5px;
+}
+
+#inputs-wrapper {
+  display: flex;
+  gap: 5px;
+  justify-content: center;
+}
+
+#form-wrapper p {
+  margin: 0;
+  padding: 5px;
+  text-align: center;
+  color: rgb(200, 0, 0);
+}
+
+#lists-wrapper {
+  padding: 5px;
+}
+
+#lists-wrapper ul {
   list-style: none;
-  background-color: purple;
-  margin: 2px;
-  padding: 2px;
+  margin: 0;
+  padding: 5px;
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  align-items: center;
 }
 
-#application-wrapper li {
-  background-color: pink;
-  margin: 2px;
-  padding: 2px;
+#lists-wrapper li {
+  padding: 5px;
+  border: solid 1px rgb(0, 0, 100);
+  border-radius: 3px;
+  box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.5);
+  align-items: center;
+  gap: 5px;
 }
 
-#application-wrapper input[class='hidden'] {
+#lists-wrapper li.notDone {
+  background-color: rgb(255, 255, 255);
+}
+
+#lists-wrapper li.done {
+  background-color: rgb(150, 150, 150);
+}
+
+#lists-wrapper li.notDone.created,
+#lists-wrapper li.done.created {
+  display: flex;
+  visibility: visible;
+  transition:
+      display 0s ease 0.5s,
+      visibility 0.5s ease 0s;
+}
+
+#lists-wrapper li.notDone.created {
+  opacity: 1;
+  transition: opacity 0.5s ease 0s;
+}
+
+#lists-wrapper li.done.created {
+  opacity: 0.7;
+  transition: opacity 0.5s ease 0s;
+}
+
+#lists-wrapper li.done.created:hover {
+  opacity: 1;
+}
+
+#lists-wrapper li.notDone.deleted,
+#lists-wrapper li.done.deleted {
+  display: none;
+  opacity: 0;
+  visibility: hidden;
+  transition:
+      display 0s ease 0.5s,
+      opacity 0.5s ease 0s,
+      visibility 0.5s ease 0s;
+}
+
+#lists-wrapper li.notDone.deleted {}
+
+#lists-wrapper li.done.deleted {}
+
+#lists-wrapper li.done.created :not(input) {
+  text-decoration: line-through;
+}
+
+#lists-wrapper input[class='hidden'] {
   visibility: hidden;
   opacity: 0;
   transition-duration: 0.5s;
@@ -129,7 +280,7 @@ const handleDelete = (event) => {
   transition-property: visibility, opacity;
 }
 
-#application-wrapper input[class='visible'] {
+#lists-wrapper input[class='visible'] {
   visibility: visible;
   opacity: 1;
   transition-duration: 0.5s;
