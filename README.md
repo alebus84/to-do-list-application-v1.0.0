@@ -8,7 +8,7 @@ Environnement :
 Stack technique :
 - HTML5
 - CSS3
-- React.js 3.3.4
+- Vue.js 3.3.4
 
 Navigateurs testés :
 - Mozilla Firefox 115.0
