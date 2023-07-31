@@ -1,8 +1,16 @@
 <script setup>
 
-import {ref, onMounted, onUpdated} from "vue";
-//import Input from "@/components/Input.vue";
-//import ToDoList from "@/components/ToDoList.vue";
+/**
+ * Merci de laisser ce bloc de commentaires afin de respecter le travail de l'auteur.
+ * To do list application v1.0.0 : créé par Alexandre DUBUS
+ * GitHub : https://github.com/alebus84
+ */
+
+import {ref, onMounted, onUpdated, onBeforeMount} from "vue";
+
+/**
+ * States :
+ */
 
 const inputElement = ref(null);
 const submitButton = ref(null);
@@ -10,6 +18,14 @@ const fieldText = ref("");
 const theTextIsTooShort = ref(false);
 const greatestId = ref(1);
 const listOfToDo = ref({notDone: [], done: []});
+
+/**
+ * Hooks :
+ */
+
+onBeforeMount(() => {
+  checkLocalStorage();
+})
 
 onMounted(() => {
   inputElement.value.addEventListener("keypress", (event) => {
@@ -24,11 +40,14 @@ onUpdated(() => {
   addMouseEvents();
 })
 
+/**
+ * Behaviours :
+ */
+
 const checkLocalStorage = () => {
   if (window.localStorage.getItem("greatestId")) greatestId.value = Number(window.localStorage.getItem("greatestId"));
   if (window.localStorage.getItem("listOfToDo")) listOfToDo.value = JSON.parse(window.localStorage.getItem("listOfToDo"));
 }
-checkLocalStorage();
 
 const addMouseEvents = () => {
   const lis = document.querySelectorAll("li");
@@ -86,6 +105,7 @@ const handleDelete = (event) => {
 
 <template>
   <div id="application-wrapper">
+    <h1>To do list application</h1>
     <div id="form-wrapper">
       <h2>Nouvelle tâche</h2>
       <div id="inputs-wrapper">
@@ -96,7 +116,7 @@ const handleDelete = (event) => {
         Le nom de la tâche doit contenir au moins 5 caractères.
       </p>
     </div>
-    <div id="lists-wrapper">
+    <div id="not-done-wrapper">
       <h2>À faire</h2>
       <ul>
         <li class="notDone created" v-for="toDo in listOfToDo.notDone" :key="toDo.id" :id="toDo.id">
@@ -105,6 +125,8 @@ const handleDelete = (event) => {
           <input type="submit" :aria-label="toDo.id" class="hidden" aria-checked="false" value="X" @click="handleDelete">
         </li>
       </ul>
+    </div>
+    <div id="done-wrapper">
       <h2>Fait</h2>
       <ul>
         <li class="done created" v-for="toDo in listOfToDo.done" :key="toDo.id" :id="toDo.id">
@@ -120,13 +142,26 @@ const handleDelete = (event) => {
 <style scoped>
 
 #application-wrapper {
+  font-family: Arial, sans-serif;
+  background-color: rgb(0, 0, 100);
   box-sizing: border-box;
+  border-radius: 3px;
   color: rgb(0, 0, 100);
   padding: 5px;
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
 }
 
 #application-wrapper * {
   box-sizing: border-box;
+}
+
+#application-wrapper h1 {
+  color: rgb(255, 255, 255);
+  margin: 0;
+  padding: 5px;
+  text-align: center;
 }
 
 #application-wrapper h2 {
@@ -143,7 +178,7 @@ const handleDelete = (event) => {
 #application-wrapper input[type='text'],
 #application-wrapper input[type='checkbox'] {
   background-color: rgb(255, 255, 255);
-  border: solid 1px rgb(0, 0, 100);
+  border: none;
   box-shadow: inset 2px 2px 5px rgba(0, 0, 0, 0.5);
 }
 
@@ -169,13 +204,15 @@ const handleDelete = (event) => {
   display: block;
   color: rgb(0, 0, 100);
   position: absolute;
-  top: 5px;
-  left: 0;
+  top: 6px;
+  left: 1px;
   line-height: 0;
 }
 
 #application-wrapper input[type='submit'] {
-  background-color: rgb(200, 200, 255);
+  font-size: 1em;
+  background-color: rgb(0, 0, 100);
+  color: rgb(255, 255, 255);
   border: none;
   box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.5);
   flex: none;
@@ -183,10 +220,12 @@ const handleDelete = (event) => {
 }
 
 #form-wrapper {
-  padding: 5px;
+  background-color: rgb(200, 200, 255);
+  border-radius: 3px;
 }
 
 #inputs-wrapper {
+  padding: 5px;
   display: flex;
   gap: 5px;
   justify-content: center;
@@ -199,11 +238,14 @@ const handleDelete = (event) => {
   color: rgb(200, 0, 0);
 }
 
-#lists-wrapper {
-  padding: 5px;
+#not-done-wrapper,
+#done-wrapper {
+  background-color: rgb(200, 200, 255);
+  border-radius: 3px;
 }
 
-#lists-wrapper ul {
+#not-done-wrapper ul,
+#done-wrapper ul {
   list-style: none;
   margin: 0;
   padding: 5px;
@@ -213,25 +255,25 @@ const handleDelete = (event) => {
   align-items: center;
 }
 
-#lists-wrapper li {
+#not-done-wrapper li,
+#done-wrapper li {
   padding: 5px;
-  border: solid 1px rgb(0, 0, 100);
   border-radius: 3px;
   box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.5);
   align-items: center;
   gap: 5px;
 }
 
-#lists-wrapper li.notDone {
+#not-done-wrapper li.notDone {
   background-color: rgb(255, 255, 255);
 }
 
-#lists-wrapper li.done {
+#done-wrapper li.done {
   background-color: rgb(150, 150, 150);
 }
 
-#lists-wrapper li.notDone.created,
-#lists-wrapper li.done.created {
+#not-done-wrapper li.notDone.created,
+#done-wrapper li.done.created {
   display: flex;
   visibility: visible;
   transition:
@@ -239,22 +281,22 @@ const handleDelete = (event) => {
       visibility 0.5s ease 0s;
 }
 
-#lists-wrapper li.notDone.created {
+#not-done-wrapper li.notDone.created {
   opacity: 1;
   transition: opacity 0.5s ease 0s;
 }
 
-#lists-wrapper li.done.created {
+#done-wrapper li.done.created {
   opacity: 0.7;
   transition: opacity 0.5s ease 0s;
 }
 
-#lists-wrapper li.done.created:hover {
+#done-wrapper li.done.created:hover {
   opacity: 1;
 }
 
-#lists-wrapper li.notDone.deleted,
-#lists-wrapper li.done.deleted {
+#not-done-wrapper li.notDone.deleted,
+#done-wrapper li.done.deleted {
   display: none;
   opacity: 0;
   visibility: hidden;
@@ -264,15 +306,16 @@ const handleDelete = (event) => {
       visibility 0.5s ease 0s;
 }
 
-#lists-wrapper li.notDone.deleted {}
+#not-done-wrapper li.notDone.deleted {}
 
-#lists-wrapper li.done.deleted {}
+#done-wrapper li.done.deleted {}
 
-#lists-wrapper li.done.created :not(input) {
+#done-wrapper li.done.created :not(input) {
   text-decoration: line-through;
 }
 
-#lists-wrapper input[class='hidden'] {
+#not-done-wrapper input[class='hidden'],
+#done-wrapper input[class='hidden'] {
   visibility: hidden;
   opacity: 0;
   transition-duration: 0.5s;
@@ -280,7 +323,8 @@ const handleDelete = (event) => {
   transition-property: visibility, opacity;
 }
 
-#lists-wrapper input[class='visible'] {
+#not-done-wrapper input[class='visible'],
+#done-wrapper input[class='visible'] {
   visibility: visible;
   opacity: 1;
   transition-duration: 0.5s;
