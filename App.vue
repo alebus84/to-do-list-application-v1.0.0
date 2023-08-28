@@ -1,11 +1,5 @@
 <script setup>
 
-/**
- * Merci de laisser ce bloc de commentaires afin de respecter le travail de l'auteur.
- * To do list application v1.0.0 : créé par Alexandre DUBUS
- * GitHub : https://github.com/alebus84
- */
-
 import {ref, onMounted, onUpdated, onBeforeMount} from "vue";
 
 /**
