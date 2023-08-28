@@ -1,6 +1,7 @@
 <script setup>
 
 import { ref, onMounted, onUpdated, onBeforeMount } from "vue";
+import Home from "@/views/Home.vue";
 
 /**
  * REFS :
@@ -99,6 +100,9 @@ const handleDelete = (event) => {
 
 <template>
   <div id="application-wrapper">
+
+    <Home/>
+
     <h1>To do list application</h1>
     <div id="form-wrapper">
       <h2>Nouvelle tâche</h2>
