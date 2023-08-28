@@ -31,7 +31,6 @@ const props = defineProps({
   }
 
 });
-// Fin de définition des props.
 
 </script>
 
