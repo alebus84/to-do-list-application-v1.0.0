@@ -1,9 +1,9 @@
 <script setup>
 
-import {ref, onMounted, onUpdated, onBeforeMount} from "vue";
+import { ref, onMounted, onUpdated, onBeforeMount } from "vue";
 
 /**
- * States :
+ * REFS :
  */
 
 const inputElement = ref(null);
@@ -14,7 +14,7 @@ const greatestId = ref(1);
 const listOfToDo = ref({notDone: [], done: []});
 
 /**
- * Hooks :
+ * HOOKS :
  */
 
 onBeforeMount(() => {
@@ -35,7 +35,7 @@ onUpdated(() => {
 })
 
 /**
- * Behaviours :
+ * COMPORTEMENTS :
  */
 
 const checkLocalStorage = () => {
