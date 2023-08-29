@@ -52,6 +52,7 @@ input[type='button'] {
   background-color: var(--dark-blue-color);
   color: var(--white-color);
   box-shadow: var(--small-shadow);
+  cursor: pointer;
 }
 
 </style>
