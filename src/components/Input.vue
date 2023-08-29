@@ -15,20 +15,23 @@
 
 <script setup>
 
+/**
+ * Composant "Input" :
+ * Ce composant représente une balise HTML <input> qui peut être de type "text" ou "button".
+ * Pour être utilisé, ce composant doit obligatoirement recevoir l'attribut "type", qui ne peut avoir comme valeur que "text" ou "button".
+ */
+
 // Définition des props :
 const props = defineProps({
 
-  // Attribut "type" de l'input.
+  // Attribut HTML "type" de l'input.
   type: {
     type: String,
     required: true
   },
 
-  // Attribut "value" de l'input.
-  value: {
-    type: String,
-    required: false
-  }
+  // Attribut HTML "value" de l'input dans le cas d'un bouton.
+  value: String
 
 });
 
@@ -36,22 +39,25 @@ const props = defineProps({
 
 <style scoped>
 
-.text-input {
-  background-color: var(--white-color);
-  color: var(--dark-blue-color);
+/* Styles dans tous les cas : */
+input {
   border: none;
-  box-shadow: var(--small-inner-shadow);
   border-radius: var(--small-border-radius);
   padding: var(--small-padding);
 }
 
+/* Styles dans le cas d'un champ texte : */
+.text-input {
+  background-color: var(--white-color);
+  color: var(--dark-blue-color);
+  box-shadow: var(--small-inner-shadow);
+}
+
+/* Styles dans le cas d'un bouton : */
 .button-input {
   background-color: var(--dark-blue-color);
   color: var(--white-color);
-  border: none;
   box-shadow: var(--small-shadow);
-  border-radius: var(--small-border-radius);
-  padding: var(--small-padding);
 }
 
 </style>
