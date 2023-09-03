@@ -1,7 +1,10 @@
 <script setup>
 
 import { ref, onMounted, onUpdated, onBeforeMount } from "vue";
-import Home from "@/views/Home.vue";
+import Home from "@/views/HomeView.vue";
+import Lists from "@/views/ListsView.vue";
+import HomeView from "@/views/HomeView.vue";
+import ListsView from "@/views/ListsView.vue";
 
 /**
  * REFS :
@@ -23,12 +26,12 @@ onBeforeMount(() => {
 })
 
 onMounted(() => {
-  inputElement.value.addEventListener("keypress", (event) => {
+  /*inputElement.value.addEventListener("keypress", (event) => {
     if (event.key === "Enter") {
       submitButton.value.click();
     }
   });
-  addMouseEvents();
+  addMouseEvents();*/
 })
 
 onUpdated(() => {
@@ -99,21 +102,28 @@ const handleDelete = (event) => {
 </script>
 
 <template>
+
   <div id="application-wrapper">
 
-    <Home/>
+    <h1>To do list application v2.0.0</h1>
 
-    <h1>To do list application</h1>
-    <div id="form-wrapper">
-      <h2>Nouvelle tâche</h2>
-      <div id="inputs-wrapper">
-        <input ref="inputElement" type="text" v-model="fieldText">
-        <input ref="submitButton" type="submit" value="Créer" @click="handleCreate">
-      </div>
-      <p class="alert" v-if="theTextIsTooShort">
-        Le nom de la tâche doit contenir au moins 5 caractères.
-      </p>
-    </div>
+    <main>
+      <home-view/>
+      <lists-view/>
+    </main>
+
+
+
+
+
+
+
+
+
+
+
+
+
     <div id="not-done-wrapper">
       <h2>À faire</h2>
       <ul>

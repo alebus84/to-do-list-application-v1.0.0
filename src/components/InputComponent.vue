@@ -2,12 +2,12 @@
 
   <input
       v-if="props.type === 'text'"
-      class="text-input"
-      :type="props.type">
+      :type="props.type"
+      :value="props.value"
+      @input="emits('update:value', $event.target.value)">
 
   <input
-      v-else-if="props.type === 'button'"
-      class="button-input"
+      v-else-if="props.type === 'submit'"
       :type="props.type"
       :value="props.value">
 
@@ -15,19 +15,31 @@
 
 <script setup>
 
-// Définition des props :
+/**
+ * DÉFINITION DES PROPS :
+ */
+
 const props = defineProps({
 
-  // Attribut HTML "type" de l'input.
+  // Attribut "type" de l'input.
   type: {
     type: String,
     required: true
   },
 
-  // Attribut HTML "value" de l'input dans le cas d'un bouton.
-  value: String
+  // Attribut "value" de l'input.
+  value: {
+    type: String,
+    required: true
+  }
 
 });
+
+/**
+ * DÉFINITION DES EMITS :
+ */
+
+const emits = defineEmits(['update:value']);
 
 </script>
 
@@ -40,15 +52,15 @@ input {
   padding: var(--small-padding);
 }
 
-/* Styles de l'input dans le cas d'un champ texte : */
+/* Styles de l'input dans le cas d'un champ de type texte : */
 input[type='text'] {
   background-color: var(--white-color);
   color: var(--dark-blue-color);
   box-shadow: var(--small-inner-shadow);
 }
 
-/* Styles de l'input dans le cas d'un bouton : */
-input[type='button'] {
+/* Styles de l'input dans le cas d'un bouton de type "submit" : */
+input[type='submit'] {
   background-color: var(--dark-blue-color);
   color: var(--white-color);
   box-shadow: var(--small-shadow);
